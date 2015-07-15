@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Flexible Width</title>
+		<style>
+			.test {
+				border: 1px solid #ccc;
+				float: left;
+				margin-right: 1em;
+				padding: 0 1em;
+			}
+
+			.test:last-child {
+				margin-right: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="test">
+			<p>Lorem ipsum blah blah blah blah blah blah blah blah</p>
+			<p>Lorem ipsum blah blah blah blah blah blah blah blah</p>
+		</div>
+		<div class="test">
+			<p>Lorem ipsum blah blah blah</p>
+			<p>Lorem ipsum blah blah blah</p>
+		</div>
+		<div class="test">
+			<p>Lorem ipsum blah blah blah blah blah</p>
+			<p>Lorem ipsum blah blah blah blah blah</p>
+		</div>
+
+		<script>
+			(function () {
+				var NormalizeWidth = function (selector) {
+					if (!selector) {
+						throw new Error("You must pass a selector to the constructor. Example: `new NormalizeWidth('.selector').setMaxWidth();`");
+					}
+
+					this.selectors = document.querySelectorAll(selector);
+				};
+
+				NormalizeWidth.prototype = {
+					getWidths: function (sel) {
+						var sel = sel || this.selectors,
+							len = sel.length,
+							i = 0,
+							widths = [];
+
+						for (i; i < len; i++) {
+							widths.push(this.selectors[i].clientWidth);
+						}
+
+						return widths;
+					},
+
+					getMaxWidth: function (widths) {
+						return Math.max.apply(null, widths);
+					},
+			
+					setMaxWidth: function () {
+						var maxWidth = this.getMaxWidth(this.getWidths(this.selectors)),
+							len = this.selectors.length,
+							i = 0;
+
+						for (i; i < len; i++) {
+							this.selectors[i].style.width = maxWidth + 'px';
+						}
+
+						return this;
+					}
+				};
+
+				new NormalizeWidth('.test').setMaxWidth();
+			}());
+		</script>
+	</body>
+</html>
